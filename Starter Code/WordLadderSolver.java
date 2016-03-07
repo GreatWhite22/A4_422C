@@ -14,6 +14,11 @@ public class WordLadderSolver implements Assignment4Interface
 	List<String> solutionList;
 	List<String> checkedList;
     // add a constructor for this object. HINT: it would be a good idea to set up the dictionary there
+	WordLadderSolver(String dictionary){
+		Assign4Driver Driver = new Assign4Driver();
+		List<String> dict = Driver.processLinesInDict(dictionary);
+	}
+	
 	public WordLadderSolver()
 	{
 		dictionary = null;
