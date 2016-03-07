@@ -24,7 +24,23 @@ public class WordLadderSolver implements Assignment4Interface
     @Override
     public boolean validateResult(String startWord, String endWord, List<String> wordLadder) 
     {
-        throw new UnsupportedOperationException("Not implemented yet!");
+    	if(!(startWord.equals(endWord))){
+    		return false;
+    	}
+    	for(int i = 0; i < wordLadder.size() - 1; i++){
+    		int differenceCount = 0;
+    		String prevWord = wordLadder.get(i);
+    		String nextWord = wordLadder.get(i + 1);
+    		for(int j = 0; j < 5; j++){
+    			if(!(prevWord.charAt(j) == nextWord.charAt(j))){
+    				differenceCount++;
+    			}
+    			if(differenceCount > 1){
+    				return false;
+    			}
+    		}
+    	}
+    	return true;
     }
 
     // add additional methods here
