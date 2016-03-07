@@ -14,14 +14,14 @@ public class WordLadderSolver implements Assignment4Interface
 	List<String> solutionList;
 	List<String> checkedList;
     // add a constructor for this object. HINT: it would be a good idea to set up the dictionary there
-	WordLadderSolver(String dictionary){
-		Assign4Driver Driver = new Assign4Driver();
-		List<String> dict = Driver.processLinesInDict(dictionary);
-	}
-	
 	public WordLadderSolver()
 	{
 		dictionary = null;
+	}
+	
+	public WordLadderSolver(String dict){
+		Assign4Driver Driver = new Assign4Driver();
+		dictionary = Driver.processLinesInDict(dict);
 	}
 	
 	public WordLadderSolver(List<String> dict)
@@ -55,43 +55,43 @@ public class WordLadderSolver implements Assignment4Interface
     	solutionList.add(startWord);
 		if(startWord.equals(endWord))
 		{
-			return true;
+			return true;					//see if you have found the word ladder
 		}
     	index = (index+1)%5;
     	ArrayList<String> possibleWords = new ArrayList<String>();
         for(int i = 0; i < dictionary.size(); i++)
         {
-        	if(dictionary.get(i).charAt(index) == endWord.charAt(index))
+        	if(dictionary.get(i).charAt(index) == endWord.charAt(index))		//check to see if a word in the dictionary is one letter off of the end word at the desired location
         	{
         		if((dictionary.get(i).charAt((index+1)%5) != startWord.charAt((index+1)%5)) || (dictionary.get(i).charAt((index+2)%5) != startWord.charAt((index+2)%5)) || (dictionary.get(i).charAt((index+3)%5) != startWord.charAt((index+3)%5)) || (dictionary.get(i).charAt((index+4)%5) != startWord.charAt((index+4)%5))) 
         		{
-        			continue;
+        			continue;								//make sure any word we validate matches the starting word
         		}
-        		if(!(solutionList.contains(dictionary.get(i))))
+        		if(!(solutionList.contains(dictionary.get(i))))			//make sure the word has not already been checked
         		{
         			int differentLetters = 0;
         			for(int j = 0; j < 5; j++)
         			{
         				if(dictionary.get(i).charAt(j) != endWord.charAt(j))
-        				{
+        				{														//see how far off the word in the dictionary is from the final word
         					differentLetters++;
         				}
         			}
         			if(differentLetters <= 1)
         			{
         				solutionList.add(dictionary.get(i));
-        				return true;
+        				return true;										//if only one letter is different from the end, you have found it
         			}
-        			possibleWords = addSort(differentLetters + dictionary.get(i), possibleWords);
+        			possibleWords = addSort(differentLetters + dictionary.get(i), possibleWords);		//add the word to the list of possibilities if all conditions have been met, giving priority to those that are closest to the final word
         		}	
         	}
         }
-        checkedList.add(startWord);
+        checkedList.add(startWord);							//show that we have handled the case when we consider the starting word
         for(int k = 0; k < possibleWords.size(); k++)
         {
         	if(checkedList.contains(possibleWords.get(k)))
     		{
-    			continue;
+    			continue;															//check each likely word
     		}
         	if(makeLadder(possibleWords.get(k).substring(1, 6),endWord,index))
         	{
@@ -99,7 +99,7 @@ public class WordLadderSolver implements Assignment4Interface
         	}
         }
         
-        for(int f = 0; f < dictionary.size(); f++)
+        for(int f = 0; f < dictionary.size(); f++)					//check the slightly less likely words
         {
         	if(checkedList.contains(dictionary.get(f)))
     		{
@@ -110,13 +110,13 @@ public class WordLadderSolver implements Assignment4Interface
         		if((dictionary.get(f).charAt((index+2)%5) != startWord.charAt((index+2)%5)) || (dictionary.get(f).charAt((index+5)%5) != startWord.charAt((index+5)%5)) || (dictionary.get(f).charAt((index+3)%5) != startWord.charAt((index+3)%5)) || (dictionary.get(f).charAt((index+4)%5) != startWord.charAt((index+4)%5))) 
         		{
         			continue;
-        		}
+        		}																//if there is a word where the index+1 char is different from the current word, which is the same as the char at the spot in the end word, but when the rest are the same
         		if(makeLadder(dictionary.get(f),endWord, (index) % 5))
         		{
         			return true;
         		}
         	}
-        	if(dictionary.get(f).charAt((index + 2) % 5) == endWord.charAt((index + 2) % 5))
+        	if(dictionary.get(f).charAt((index + 2) % 5) == endWord.charAt((index + 2) % 5))			//repeat above for index+2
         	{
         		if((dictionary.get(f).charAt((index+1)%5) != startWord.charAt((index+1)%5)) || (dictionary.get(f).charAt((index+5)%5) != startWord.charAt((index+5)%5)) || (dictionary.get(f).charAt((index+3)%5) != startWord.charAt((index+3)%5)) || (dictionary.get(f).charAt((index+4)%5) != startWord.charAt((index+4)%5))) 
         		{
@@ -127,7 +127,7 @@ public class WordLadderSolver implements Assignment4Interface
         			return true;
         		}
         	}
-        	if(dictionary.get(f).charAt((index + 3) % 5) == endWord.charAt((index + 3) % 5))
+        	if(dictionary.get(f).charAt((index + 3) % 5) == endWord.charAt((index + 3) % 5))		//repeat above for index+3
         	{
         		if((dictionary.get(f).charAt((index+1)%5) != startWord.charAt((index+1)%5)) || (dictionary.get(f).charAt((index+2)%5) != startWord.charAt((index+2)%5)) || (dictionary.get(f).charAt((index+4)%5) != startWord.charAt((index+4)%5)) || (dictionary.get(f).charAt((index+5)%5) != startWord.charAt((index+5)%5))) 
         		{
@@ -144,13 +144,13 @@ public class WordLadderSolver implements Assignment4Interface
         		{
         			continue;
         		}
-        		if(makeLadder(dictionary.get(f),endWord, (index + 3) % 5))
+        		if(makeLadder(dictionary.get(f),endWord, (index + 3) % 5))			//repeat above for index+4
         		{
         			return true;
         		}
         	}
         }
-        for(int f = 0; f < dictionary.size(); f++)
+        for(int f = 0; f < dictionary.size(); f++)		//since we have nothing better to do, maybe going sideways will get us forward
         {
         	if(checkedList.contains(dictionary.get(f)))
     		{
@@ -159,7 +159,7 @@ public class WordLadderSolver implements Assignment4Interface
         		if((dictionary.get(f).charAt((index+2)%5) == startWord.charAt((index+2)%5)) && (dictionary.get(f).charAt((index+5)%5) == startWord.charAt((index+5)%5)) && (dictionary.get(f).charAt((index+3)%5) == startWord.charAt((index+3)%5)) && (dictionary.get(f).charAt((index+4)%5) == startWord.charAt((index+4)%5))) 
         		{
         			if(makeLadder(dictionary.get(f),endWord, (index) % 5))
-            		{
+            		{															//just see if there is another word that we haven't already checked that is in the dictionary that is one letter off of the current word in the index + 1 location
             			return true;
             		}
         		}
@@ -168,7 +168,7 @@ public class WordLadderSolver implements Assignment4Interface
         		if((dictionary.get(f).charAt((index+1)%5) == startWord.charAt((index+1)%5)) && (dictionary.get(f).charAt((index+5)%5) == startWord.charAt((index+5)%5)) && (dictionary.get(f).charAt((index+3)%5) == startWord.charAt((index+3)%5)) && (dictionary.get(f).charAt((index+4)%5) == startWord.charAt((index+4)%5))) 
         		{
         			if(makeLadder(dictionary.get(f),endWord, (index + 1) % 5))
-            		{
+            		{																	//repeat for index+2
             			return true;
             		}
         		}       		
@@ -179,27 +179,24 @@ public class WordLadderSolver implements Assignment4Interface
         		{
         			if(makeLadder(dictionary.get(f),endWord, (index + 2) % 5))
             		{
-            			return true;
+            			return true;												//repeat for index+3
             		}
         		}
         		if((dictionary.get(f).charAt((index+1)%5) == startWord.charAt((index+1)%5)) && (dictionary.get(f).charAt((index+2)%5) == startWord.charAt((index+2)%5)) && (dictionary.get(f).charAt((index+3)%5) == startWord.charAt((index+3)%5)) && (dictionary.get(f).charAt((index+5)%5) == startWord.charAt((index+5)%5))) 
         		{
         			if(makeLadder(dictionary.get(f),endWord, (index + 3) % 5))
-            		{
+            		{																			//repeat for index+4
             			return true;
             		}
         		}	
         }
         solutionList.remove(startWord);
-        return false;
+        return false;								//this was an unsuccessful attempt to find a word ladder
     }
 
     @Override
     public boolean validateResult(String startWord, String endWord, List<String> wordLadder) 
     {
-    	if(!(startWord.equals(endWord))){
-    		return false;
-    	}
     	for(int i = 0; i < wordLadder.size() - 1; i++){
     		int differenceCount = 0;
     		String prevWord = wordLadder.get(i);						//make sure that only one letter is different between each rung
